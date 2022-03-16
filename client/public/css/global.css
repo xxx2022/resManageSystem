@@ -1,0 +1,26 @@
+.ml20{
+    margin-left: 20px;
+}
+.mr20{
+    margin-right: 20px;
+}
+.ml10{
+    margin-left: 10px;
+}
+.mr10{
+    margin-right: 10px;
+}
+.pl10{
+    padding-left: 10px;
+}
+.pr10{
+    padding-right: 10px;
+}
+
+
+
+
+.text-btn{
+    color: #4a97eb;
+    cursor:pointer;
+}

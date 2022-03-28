@@ -8,8 +8,10 @@
 			<el-form :model="foodForm" label-width="140px" size="small">
 				<el-form-item label="上传图片：">
 					<el-upload
-						action="http://localhost:5000/uploadImg"
+						ref="uploadImg"
+						action="http://localhost:8080/api/upload/img"
 						list-type="picture-card"
+						name="img"
 						:on-preview="handlePreview"
 						:before-upload="beforeUpload"
 						:on-remove="handleRemove"
@@ -127,14 +129,17 @@ export default {
 				.catch((err) => {
 					this.$message.error(`${this.info.type == "0" ? "新增" : "更新"}失败`);
 				});
-			this.dialogFormVisible = false;
+				this.$refs['uploadImg'].clearFiles()
+				this.dialogFormVisible = false;
 		},
 		cancel() {
 			// this.$refs.upload.submit();
+			this.$refs['uploadImg'].clearFiles()
 			this.dialogFormVisible = false;
 		},
 		handleClose() {
 			this.$emit("change", this.dialogFormVisible);
+			this.$refs['uploadImg'].clearFiles()
 		},
 	},
 };

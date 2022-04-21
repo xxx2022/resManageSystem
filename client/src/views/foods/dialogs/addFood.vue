@@ -18,6 +18,7 @@
 						:on-progress="sendIng"
 						:on-error="sendErr"
 						:on-success="sendSuccess"
+						:file-list="fileList"
 					>
 						<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
 					</el-upload>
@@ -31,11 +32,13 @@
 				<el-form-item label="价格：">
 					<el-input v-model="foodForm.price" autocomplete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="销量：">
+				<!-- <el-form-item label="销量：">
 					<el-input v-model="foodForm.sales" autocomplete="off"></el-input>
-				</el-form-item>
+				</el-form-item> -->
 				<el-form-item label="类型：">
-					<el-input v-model="foodForm.type" autocomplete="off"></el-input>
+					<el-select v-model="foodForm.type" style="width:100%;">
+						<el-option v-for="item in foodTypeList" :key="item.id" :value="item.id" :label="item.name"></el-option>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="描述：">
 					<el-input v-model="foodForm.description" type="textarea" :rows="5"></el-input>
@@ -58,7 +61,9 @@ export default {
 			foodForm: {},
 			id: "",
 			isUpdate: false,
-			fileList: []
+			fileList: [],
+			img_url:'',
+			foodTypeList:[]
 		};
 	},
 	watch: {
@@ -68,31 +73,35 @@ export default {
 				this.id = val.id;
 				if (val.type == "0") {
 					this.foodForm = {};
+					this.fileList=[]
 				}
 				if (val.type == "1") this.getFoodsDetail();
 			},
 			deep: true,
 		},
 	},
+	mounted(){
+		this.getFoodType()
+	},
 	methods: {
 		handleRemove(file, fileList) {
-			console.log(file, fileList);
+			// console.log(file, fileList);
 		},
 		handlePreview(file) {
 			console.log(file);
 		},
 		beforeUpload(file) {
-			console.log(file);
+			// console.log(file);
 		},
 		sendIng(event, file) {
-			console.log(event)
-			console.log(file)
+			// console.log(event)
+			// console.log(file)
 		},
 		sendErr(err) {
-			console.log(err)
+			// console.log(err)
 		},
-		sendSuccess(val){
-			console.log(val);
+		sendSuccess(response, file, fileList){
+			this.img_url = response
 		},
 		//获取菜品详情
 		getFoodsDetail() {
@@ -111,10 +120,18 @@ export default {
 						type: res.data.data[0].type,
 						description: res.data.data[0].description,
 					};
+					this.fileList=[{name:res.data.data[0].food_name,url:res.data.data[0].img_url}]
+						
 				});
+		},
+		getFoodType(){
+			this.$axios.get("api/foods/foodType").then(res=>{
+				this.foodTypeList = res.data.data || []
+			})
 		},
 		save() {
 			if (this.info.type == "1") this.foodForm["id"] = this.id;
+			this.foodForm.img_url = this.img_url
 			this.$axios
 				.post(
 					this.info.type == "0" ? "api/foods/foodAdd" : "api/foods/foodUpdate",
@@ -140,6 +157,7 @@ export default {
 		handleClose() {
 			this.$emit("change", this.dialogFormVisible);
 			this.$refs['uploadImg'].clearFiles()
+			this.fileList =[]
 		},
 	},
 };

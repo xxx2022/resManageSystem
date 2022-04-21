@@ -20,8 +20,11 @@
 			<el-table-column prop="food_name" label="菜名" width="180"></el-table-column>
 			<el-table-column prop="attr" label="荤素"></el-table-column>
 			<el-table-column prop="price" label="价格"></el-table-column>
-			<el-table-column prop="sales" label="销量"></el-table-column>
-			<el-table-column prop="type" label="类型"></el-table-column>
+			<el-table-column prop="type" label="类型">
+				<template slot-scope="{row}">
+					{{foodType[row.type]}}
+				</template>
+			</el-table-column>
 			<el-table-column prop="description" label="描述"></el-table-column>
 			<el-table-column label="操作">
 				<template slot-scope="{row}">
@@ -57,7 +60,17 @@ export default {
 			total:0,
             currentPage:1,
             pageSize:10,
-			foodName:''
+			foodName:'',
+			foodType:{
+				0:'本店促销',
+				1:'本店热销',
+				2:'加料',
+				3:'酒水饮料',
+				4:'推荐套餐',
+				5:'本店特色',
+				6:'主食',
+				7:'特色小炒'
+			}
 		};
 	},
 	components: {

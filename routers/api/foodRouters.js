@@ -29,9 +29,30 @@ router.post("/foodList", (request, response) => {
         }
     })
 })
+router.get('/foodType',(request,response)=>{
+    const sql = `select * from foods_type`
+    db.dataControl(sql, (req, res) => {
+        if (req.status == false) {
+            return response.status(400).json({
+                msg: req.msg
+            })
+        } else {
+            if (req.data && req.data.length > 0) {
+                response.status(200).send({
+                    data: req.data
+                })
+            } else {
+                response.send({
+                    msg: '暂无数据'
+                })
+            }
+        }
+    })
+})
 //增加菜品信息
 router.post("/foodAdd", (request, response) => {
     // const sql = `insert into foods value`
+    let img_url = `http://localhost:8088/${request.body.img_url}`
     const sql = `select * from foods where food_name='${request.body.food_name}'`
     db.dataControl(sql, (req, res) => {
         if (req.status == false) {
@@ -44,7 +65,7 @@ router.post("/foodAdd", (request, response) => {
                     msg: '菜品已存在'
                 })
             } else {
-                const sql = `insert into foods (img_url, price, food_name, type, sales, description, attr) values('${request.body.img_url}','${request.body.price}','${request.body.food_name}','${request.body.type}','${request.body.sales}','${request.body.description}','${request.body.attr}')`
+                const sql = `insert into foods (img_url, price, food_name, type, description, attr) values('${img_url}','${request.body.price}','${request.body.food_name}','${request.body.type}','${request.body.description}','${request.body.attr}')`
                 db.dataControl(sql, (req, res) => {
                     if (req.status == false) {
                         return response.send({
@@ -77,7 +98,11 @@ router.post("/foodDel", (request, response) => {
 })
 //修改菜品信息
 router.post("/foodUpdate", (request, response) => {
-    const sql = "update foods set food_name = '" + request.body.food_name + "', price='" + request.body.price + "', type='" + request.body.type + "', description='" + request.body.description + "', sales='" + request.body.sales + "', attr='" + request.body.attr + "' where id='" + request.body.id + "'";
+    let img_url = `http://localhost:8088/${request.body.img_url}`
+    const sql = "update foods set food_name = '" + request.body.food_name + "', price='" + request.body.price + "', \
+    type='" + request.body.type + "', description='" + request.body.description + "', \
+    img_url='" + img_url + "',attr='" + request.body.attr + "' \
+    where id='" + request.body.id + "'";
     db.dataControl(sql, (req, res) => {
         if (req.status == false) {
             return response.send({

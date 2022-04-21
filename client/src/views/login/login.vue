@@ -52,7 +52,7 @@ export default {
                 // this.$store.dispatch("setUser", decode);
                 this.$message.success(res.data.msg)
                 this.$router.push({
-                    name: 'Home'
+                    name: 'Index'
                 })
             })
             // .catch((err) => {
